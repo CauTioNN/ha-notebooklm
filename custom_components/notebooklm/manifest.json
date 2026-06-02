@@ -1,0 +1,14 @@
+{
+  "domain": "notebooklm",
+  "name": "NotebookLM",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": ["http"],
+  "documentation": "https://github.com/teng-lin/ha-notebooklm",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/teng-lin/ha-notebooklm/issues",
+  "loggers": ["notebooklm"],
+  "requirements": ["notebooklm-py==0.6.0"],
+  "version": "0.2.0"
+}

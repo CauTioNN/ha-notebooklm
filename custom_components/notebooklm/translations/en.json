@@ -1,0 +1,256 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "NotebookLM",
+        "description": "Choose how to connect to your Google NotebookLM account.",
+        "menu_options": {
+          "google": "Sign in with Google (via add-on, inside Home Assistant)",
+          "manual": "Paste credentials (storage_state.json)"
+        }
+      },
+      "manual": {
+        "title": "Paste credentials",
+        "description": "On your computer run `notebooklm login`, then paste the full contents of `~/.notebooklm/profiles/default/storage_state.json` below.",
+        "data": {
+          "storage_state": "storage_state.json contents"
+        }
+      },
+      "google": {
+        "title": "Sign in with Google",
+        "description": "1. Install and start the **NotebookLM Login** add-on.\n2. Open its Web UI and complete the Google sign-in.\n3. When it reports success, press **Submit** below to finish."
+      }
+    },
+    "error": {
+      "invalid_storage_state": "That is not a valid storage_state.json (missing the 'cookies' field).",
+      "invalid_auth": "The credentials were rejected by NotebookLM. Sign in again and copy a fresh storage_state.json.",
+      "cannot_connect": "Could not reach NotebookLM. Check your connection and try again.",
+      "addon_result_missing": "No login result found yet. Complete the Google sign-in in the add-on first."
+    },
+    "abort": {
+      "already_configured": "This NotebookLM account is already configured.",
+      "reauth_successful": "Re-authentication was successful.",
+      "wrong_account": "The credentials are for a different Google account than this entry."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "NotebookLM options",
+        "data": {
+          "default_notebook": "Default notebook",
+          "scan_interval": "Update interval (seconds)"
+        },
+        "data_description": {
+          "default_notebook": "Used by services when no notebook_id is supplied.",
+          "scan_interval": "How often to refresh the notebook list and auth status."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "auth_status": { "name": "Authentication status" },
+      "notebooks": { "name": "Notebooks" }
+    },
+    "select": {
+      "active_notebook": { "name": "Active notebook" }
+    }
+  },
+  "services": {
+    "create_notebook": {
+      "name": "Create notebook",
+      "description": "Create a new NotebookLM notebook.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use (optional if only one)." },
+        "title": { "name": "Title", "description": "Title of the new notebook." }
+      }
+    },
+    "delete_notebook": {
+      "name": "Delete notebook",
+      "description": "Delete a notebook.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Notebook to delete (defaults to the configured default notebook)." }
+      }
+    },
+    "list_notebooks": {
+      "name": "List notebooks",
+      "description": "Return all notebooks in the account.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." }
+      }
+    },
+    "add_url": {
+      "name": "Add source: URL",
+      "description": "Add a web page or YouTube URL as a source.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook (defaults to the configured default)." },
+        "url": { "name": "URL", "description": "The URL to add." },
+        "wait": { "name": "Wait", "description": "Wait until the source is processed." }
+      }
+    },
+    "add_text": {
+      "name": "Add source: text",
+      "description": "Add pasted text as a source.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "title": { "name": "Title", "description": "Title for the source." },
+        "content": { "name": "Content", "description": "The text content." }
+      }
+    },
+    "add_file": {
+      "name": "Add source: file",
+      "description": "Upload a local file (PDF, audio, etc.) as a source.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "file_path": { "name": "File path", "description": "Path to a file inside an allowed Home Assistant directory." }
+      }
+    },
+    "add_research": {
+      "name": "Add web/Drive research",
+      "description": "Run a research query and import the discovered sources.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "query": { "name": "Query", "description": "The research query." },
+        "source": { "name": "Source", "description": "Search the web or Google Drive." },
+        "mode": { "name": "Mode", "description": "fast (quick) or deep (comprehensive)." }
+      }
+    },
+    "ask": {
+      "name": "Ask a question",
+      "description": "Ask the notebook a question and get the answer back.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "question": { "name": "Question", "description": "The question to ask." },
+        "conversation_id": { "name": "Conversation ID", "description": "Continue an existing conversation (optional)." }
+      }
+    },
+    "generate_audio": {
+      "name": "Generate audio overview (podcast)",
+      "description": "Generate an Audio Overview. Fires a notebooklm_artifact_ready event when done.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "instructions": { "name": "Instructions", "description": "Optional steering instructions." },
+        "language": { "name": "Language", "description": "Output language code (e.g. en, he)." },
+        "format": { "name": "Format", "description": "deep-dive, brief, critique or debate." },
+        "length": { "name": "Length", "description": "short, default or long." },
+        "wait": { "name": "Wait", "description": "Block until finished and return the download URL." }
+      }
+    },
+    "generate_video": {
+      "name": "Generate video overview",
+      "description": "Generate a Video Overview. Fires a notebooklm_artifact_ready event when done.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "instructions": { "name": "Instructions", "description": "Optional steering instructions." },
+        "language": { "name": "Language", "description": "Output language code." },
+        "format": { "name": "Format", "description": "explainer or brief." },
+        "style": { "name": "Style", "description": "Visual style." },
+        "wait": { "name": "Wait", "description": "Block until finished." }
+      }
+    },
+    "generate_quiz": {
+      "name": "Generate quiz",
+      "description": "Generate a quiz from the notebook sources.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "instructions": { "name": "Instructions", "description": "Optional instructions." },
+        "difficulty": { "name": "Difficulty", "description": "easy, medium or hard." },
+        "quantity": { "name": "Quantity", "description": "fewer, standard or more." },
+        "wait": { "name": "Wait", "description": "Block until finished." }
+      }
+    },
+    "generate_flashcards": {
+      "name": "Generate flashcards",
+      "description": "Generate flashcards from the notebook sources.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "instructions": { "name": "Instructions", "description": "Optional instructions." },
+        "difficulty": { "name": "Difficulty", "description": "easy, medium or hard." },
+        "quantity": { "name": "Quantity", "description": "fewer, standard or more." },
+        "wait": { "name": "Wait", "description": "Block until finished." }
+      }
+    },
+    "generate_report": {
+      "name": "Generate report",
+      "description": "Generate a report (briefing doc, study guide, blog post).",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "instructions": { "name": "Instructions", "description": "Optional instructions." },
+        "language": { "name": "Language", "description": "Output language code." },
+        "format": { "name": "Format", "description": "briefing-doc, study-guide or blog-post." },
+        "wait": { "name": "Wait", "description": "Block until finished." }
+      }
+    },
+    "generate_slide_deck": {
+      "name": "Generate slide deck",
+      "description": "Generate a slide deck.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "instructions": { "name": "Instructions", "description": "Optional instructions." },
+        "language": { "name": "Language", "description": "Output language code." },
+        "format": { "name": "Format", "description": "detailed or presenter." },
+        "length": { "name": "Length", "description": "default or short." },
+        "wait": { "name": "Wait", "description": "Block until finished." }
+      }
+    },
+    "generate_infographic": {
+      "name": "Generate infographic",
+      "description": "Generate an infographic.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "instructions": { "name": "Instructions", "description": "Optional instructions." },
+        "language": { "name": "Language", "description": "Output language code." },
+        "orientation": { "name": "Orientation", "description": "landscape, portrait or square." },
+        "detail": { "name": "Detail", "description": "concise, standard or detailed." },
+        "wait": { "name": "Wait", "description": "Block until finished." }
+      }
+    },
+    "generate_data_table": {
+      "name": "Generate data table",
+      "description": "Generate a data table from the notebook sources.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "instructions": { "name": "Instructions", "description": "Describe the table you want." },
+        "language": { "name": "Language", "description": "Output language code." },
+        "wait": { "name": "Wait", "description": "Block until finished." }
+      }
+    },
+    "generate_mind_map": {
+      "name": "Generate mind map",
+      "description": "Generate a mind map (created synchronously).",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "instructions": { "name": "Instructions", "description": "Optional instructions." },
+        "language": { "name": "Language", "description": "Output language code." }
+      }
+    },
+    "download": {
+      "name": "Download artifact",
+      "description": "Download a generated artifact to a file inside Home Assistant.",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook." },
+        "artifact_type": { "name": "Type", "description": "Which artifact type to download." },
+        "output_path": { "name": "Output path", "description": "Destination path inside an allowed directory." },
+        "artifact_id": { "name": "Artifact ID", "description": "Specific artifact (defaults to the latest)." },
+        "format": { "name": "Format", "description": "Optional export format (e.g. json, markdown, pptx, csv)." }
+      }
+    }
+  }
+}

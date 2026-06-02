@@ -1,0 +1,81 @@
+# NotebookLM management card — paste into a dashboard (Edit dashboard → ⋮ →
+# "Raw configuration editor", or add a manual card and paste the body).
+# Uses only built-in cards. Needs examples/notebooklm_package.yaml installed
+# for the "Ask" box and button.
+type: vertical-stack
+cards:
+  - type: markdown
+    content: >
+      ## 📓 NotebookLM
+
+      בחר **מחברת פעילה** למטה — כל הכפתורים והפעולות יעבדו עליה (בלי לרשום ID).
+
+  - type: entities
+    title: סטטוס
+    show_header_toggle: false
+    entities:
+      - entity: select.notebooklm_active_notebook
+        name: מחברת פעילה
+      - entity: sensor.notebooklm_auth_status
+        name: התחברות
+      - entity: sensor.notebooklm_notebooks
+        name: מספר מחברות
+
+  - type: markdown
+    content: >
+      ### המחברות שלך
+
+      {% for nb in state_attr('sensor.notebooklm_notebooks','notebooks') %}
+      - **{{ nb.title }}** — {{ nb.sources_count }} מקורות
+      {% endfor %}
+
+  - type: entities
+    title: שאל את המחברת הפעילה
+    entities:
+      - entity: input_text.notebooklm_question
+        name: שאלה
+      - type: button
+        name: שליחה
+        icon: mdi:send
+        action_name: שאל
+        tap_action:
+          action: perform-action
+          perform_action: script.notebooklm_ask
+
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      - type: button
+        name: פודקאסט
+        icon: mdi:podcast
+        show_state: false
+        tap_action:
+          action: perform-action
+          perform_action: notebooklm.generate_audio
+      - type: button
+        name: מבחן
+        icon: mdi:help-box-outline
+        show_state: false
+        tap_action:
+          action: perform-action
+          perform_action: notebooklm.generate_quiz
+      - type: button
+        name: דוח
+        icon: mdi:file-document-outline
+        show_state: false
+        tap_action:
+          action: perform-action
+          perform_action: notebooklm.generate_report
+      - type: button
+        name: מפת חשיבה
+        icon: mdi:sitemap-outline
+        show_state: false
+        tap_action:
+          action: perform-action
+          perform_action: notebooklm.generate_mind_map
+
+  - type: markdown
+    content: >
+      *פעולות יצירה ארוכות (פודקאסט/וידאו) רצות ברקע — תקבל התראה כשמוכן (ראו
+      האוטומציה בחבילה).*

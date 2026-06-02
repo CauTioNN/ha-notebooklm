@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv*/
+.login-env/
+*.egg-info/
+
+# Local tooling / editor state — never publish
+.claude/
+
+# Secrets / credentials — never commit these
+storage_state.json
+*storage_state*.json
+.notebooklm_login_result.json
+.notebooklm/
+secrets.yaml
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
