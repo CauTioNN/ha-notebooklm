@@ -54,10 +54,17 @@ and these automations out of the box.
 
 ## Installation
 
+> One-click buttons (require the repository to be **public**; the integration
+> button also needs [HACS](https://hacs.xyz) installed):
+>
+> [![Add integration repo to HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=CauTioNN&repository=ha-notebooklm&category=integration)
+> &nbsp;
+> [![Add the login add-on repository](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FCauTioNN%2Fha-notebooklm)
+
 ### 1. Integration (via HACS)
 
-1. HACS → **Custom repositories** → add `https://github.com/CauTioNN/ha-notebooklm`
-   with category **Integration**.
+1. Click the **HACS** button above (or HACS → **Custom repositories** → add
+   `https://github.com/CauTioNN/ha-notebooklm`, category **Integration**).
 2. Install **NotebookLM**, then restart Home Assistant.
 3. **Settings → Devices & Services → Add Integration → NotebookLM**.
 
@@ -67,8 +74,9 @@ and these automations out of the box.
 
 Only needed if you want to do the Google login from inside Home Assistant:
 
-1. **Settings → Add-ons → Add-on Store → ⋮ → Repositories** → add
-   `https://github.com/CauTioNN/ha-notebooklm`.
+1. Click the **add-on repository** button above (or **Settings → Add-ons →
+   Add-on Store → ⋮ → Repositories** → add
+   `https://github.com/CauTioNN/ha-notebooklm`).
 2. Install **NotebookLM Login**, start it, open its Web UI and sign in.
    See [the add-on docs](notebooklm_login/DOCS.md).
 
