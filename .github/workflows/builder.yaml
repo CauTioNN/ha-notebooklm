@@ -37,5 +37,5 @@ jobs:
             --${{ matrix.arch }} \
             --target /data/notebooklm_login \
             --image "{arch}-addon-notebooklm_login" \
-            --docker-hub "ghcr.io/${{ github.repository_owner }}/ha-notebooklm" \
+            --docker-hub "ghcr.io/cautionn/ha-notebooklm" \
             --addon

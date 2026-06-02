@@ -3,5 +3,5 @@ build_from:
   aarch64: python:3.12-slim-bookworm
 labels:
   org.opencontainers.image.title: NotebookLM Login
-  org.opencontainers.image.source: https://github.com/teng-lin/ha-notebooklm
+  org.opencontainers.image.source: https://github.com/CauTioNN/ha-notebooklm
   org.opencontainers.image.licenses: MIT

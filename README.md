@@ -56,7 +56,7 @@ and these automations out of the box.
 
 ### 1. Integration (via HACS)
 
-1. HACS → **Custom repositories** → add `https://github.com/teng-lin/ha-notebooklm`
+1. HACS → **Custom repositories** → add `https://github.com/CauTioNN/ha-notebooklm`
    with category **Integration**.
 2. Install **NotebookLM**, then restart Home Assistant.
 3. **Settings → Devices & Services → Add Integration → NotebookLM**.
@@ -68,7 +68,7 @@ and these automations out of the box.
 Only needed if you want to do the Google login from inside Home Assistant:
 
 1. **Settings → Add-ons → Add-on Store → ⋮ → Repositories** → add
-   `https://github.com/teng-lin/ha-notebooklm`.
+   `https://github.com/CauTioNN/ha-notebooklm`.
 2. Install **NotebookLM Login**, start it, open its Web UI and sign in.
    See [the add-on docs](notebooklm_login/DOCS.md).
 
@@ -218,12 +218,11 @@ Assistant is to make your home work with it for you.*
 The add-on ships a **prebuilt image** so users pull it instead of building the
 heavy Chromium image on-device:
 
-1. Replace `teng-lin` with your GitHub owner in `notebooklm_login/config.yaml`
-   (`image:`) and in `notebooklm_login/build.yaml`.
-2. Push to `main` — the workflow in `.github/workflows/builder.yaml` builds
+1. Push to `main` — the workflow in `.github/workflows/builder.yaml` builds
    `amd64` + `aarch64` images and pushes them to GHCR
-   (`ghcr.io/<owner>/ha-notebooklm/{arch}-addon-notebooklm_login`).
-3. Make the GHCR package **public** (Packages → settings) so Home Assistant can
+   (`ghcr.io/cautionn/ha-notebooklm/{arch}-addon-notebooklm_login`; GHCR image
+   names must be lowercase).
+2. Make the GHCR package **public** (Packages → settings) so Home Assistant can
    pull it without auth.
 
 Installed as a **local** add-on (copied into `/addons`), the `image:` key is

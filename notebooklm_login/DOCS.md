@@ -1,7 +1,7 @@
 # NotebookLM Login add-on
 
 This add-on lets you sign in to Google **from inside Home Assistant** to
-authenticate the [NotebookLM integration](https://github.com/teng-lin/ha-notebooklm).
+authenticate the [NotebookLM integration](https://github.com/CauTioNN/ha-notebooklm).
 It runs a real Chromium window on a virtual display and streams it to your
 browser through the add-on's Ingress panel (noVNC), so you can complete the
 normal Google login. The captured session is then written to your Home
