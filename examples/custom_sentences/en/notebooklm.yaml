@@ -3,7 +3,7 @@
 # Then just say / type to Assist:  "ask my notebook <anything>"
 language: en
 intents:
-  AskNotebook:
+  NotebookLMAsk:
     data:
       - sentences:
           - "ask my notebook {question}"

@@ -1,22 +1,26 @@
 # NotebookLM management card — paste into a dashboard (Edit dashboard → ⋮ →
-# "Raw configuration editor", or add a manual card and paste the body).
-# Uses only built-in cards. Needs examples/notebooklm_package.yaml installed
-# for the "Ask" box and button.
+# "Raw configuration editor", or "Add card → Manual" and paste this).
+# Uses ONLY entities the integration creates automatically — no helpers,
+# scripts or packages needed.
+#
+# NOTE: entity ids assume a single NotebookLM account. With more than one
+# account HA appends _2 etc. — check Developer Tools → States if needed.
 type: vertical-stack
 cards:
   - type: markdown
     content: >
       ## 📓 NotebookLM
 
-      בחר **מחברת פעילה** למטה — כל הכפתורים והפעולות יעבדו עליה (בלי לרשום ID).
+      בחר **מחברת פעילה**, כתוב שאלה ולחץ **שאל**. כל הכפתורים פועלים על המחברת
+      הפעילה (בלי לרשום ID).
 
   - type: entities
-    title: סטטוס
+    title: סטטוס ובחירה
     show_header_toggle: false
     entities:
       - entity: select.notebooklm_active_notebook
         name: מחברת פעילה
-      - entity: sensor.notebooklm_auth_status
+      - entity: sensor.notebooklm_authentication_status
         name: התחברות
       - entity: sensor.notebooklm_notebooks
         name: מספר מחברות
@@ -32,15 +36,16 @@ cards:
   - type: entities
     title: שאל את המחברת הפעילה
     entities:
-      - entity: input_text.notebooklm_question
+      - entity: text.notebooklm_question
         name: שאלה
-      - type: button
-        name: שליחה
-        icon: mdi:send
-        action_name: שאל
-        tap_action:
-          action: perform-action
-          perform_action: script.notebooklm_ask
+      - entity: button.notebooklm_ask
+        name: שלח שאלה
+
+  - type: markdown
+    content: >
+      ### תשובה אחרונה
+
+      {{ state_attr('sensor.notebooklm_last_answer','answer') or 'עדיין אין תשובה.' }}
 
   - type: grid
     columns: 2
@@ -78,4 +83,4 @@ cards:
   - type: markdown
     content: >
       *פעולות יצירה ארוכות (פודקאסט/וידאו) רצות ברקע — תקבל התראה כשמוכן (ראו
-      האוטומציה בחבילה).*
+      `examples/automations.yaml`).*

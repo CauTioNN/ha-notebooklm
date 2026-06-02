@@ -9,7 +9,12 @@ DOMAIN = "notebooklm"
 # The pinned version of the upstream library this integration is built against.
 LIBRARY_VERSION = "0.6.0"
 
-PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.SELECT]
+PLATFORMS: list[Platform] = [
+    Platform.SENSOR,
+    Platform.SELECT,
+    Platform.TEXT,
+    Platform.BUTTON,
+]
 
 # --- Config entry / data keys ------------------------------------------------
 # ``storage_state`` holds the Playwright ``storage_state.json`` payload (the

@@ -10,5 +10,5 @@
   "issue_tracker": "https://github.com/CauTioNN/ha-notebooklm/issues",
   "loggers": ["notebooklm"],
   "requirements": ["notebooklm-py==0.6.0"],
-  "version": "0.2.0"
+  "version": "0.3.0"
 }

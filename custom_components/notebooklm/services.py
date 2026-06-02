@@ -25,7 +25,6 @@ from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import config_validation as cv
 
 from .const import (
-    CONF_DEFAULT_NOTEBOOK,
     DOMAIN,
     EVENT_ARTIFACT_FAILED,
     EVENT_ARTIFACT_READY,
@@ -147,11 +146,7 @@ def _resolve_coordinator(hass: HomeAssistant, call: ServiceCall) -> NotebookLMCo
 
 
 def _resolve_notebook(coordinator: NotebookLMCoordinator, call: ServiceCall) -> str:
-    notebook_id = (
-        call.data.get(ATTR_NOTEBOOK_ID)
-        or coordinator.active_notebook_id
-        or coordinator.config_entry.options.get(CONF_DEFAULT_NOTEBOOK)
-    )
+    notebook_id = call.data.get(ATTR_NOTEBOOK_ID) or coordinator.default_notebook()
     if not notebook_id:
         raise ServiceValidationError(
             "No notebook selected. Pick one in the 'Active notebook' dropdown, "

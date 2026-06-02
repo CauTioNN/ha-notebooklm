@@ -19,8 +19,13 @@ quizzes, reports, mind maps and more.
     via the companion **NotebookLM Login add-on** (runs Chromium + noVNC).
   - **Paste credentials** — paste a `storage_state.json` you generated on your
     own computer (no add-on needed).
-- **Sensors**: authentication status and notebook count (with the notebook list
-  as an attribute). Use them with any standard Lovelace card.
+- **Built-in entities** (created automatically — no helpers/scripts to copy):
+  - `select` **Active notebook** — pick the notebook everything acts on, no IDs.
+  - `text` **Question** + `button` **Ask** + `sensor` **Last answer** — a ready
+    question→answer box.
+  - `sensor` **Authentication status** and **Notebooks** (list in attributes).
+- **Voice (Assist)** — a `NotebookLMAsk` intent is registered in code; ask your
+  notebook by voice and hear the answer.
 - **A full service set**, designed to be automation-friendly (a configurable
   default notebook, response data, and events for long-running jobs).
 
@@ -39,18 +44,16 @@ Wiring it into HA means your **home automations can use that knowledge**:
 - 📰 **Auto-research** — kick off a web-research import on a schedule and get a
   briefing when it's done.
 
-The included [`examples/`](examples/) give you a ready dashboard, an "ask" box,
-and these automations out of the box.
+## Quick start
 
-## Quick start (dashboard + helpers)
-
-1. Install the integration and connect (below).
-2. Copy [`examples/notebooklm_package.yaml`](examples/notebooklm_package.yaml)
-   to `config/packages/notebooklm.yaml` (enable packages in `configuration.yaml`),
-   then restart.
-3. Add the card from [`examples/dashboard.yaml`](examples/dashboard.yaml) to a
-   dashboard. Pick a notebook in the **Active notebook** dropdown — every action
-   then runs on it, **no IDs to type**.
+1. Install the integration and connect (below). The question box, Ask button,
+   answer sensor and voice intent appear automatically — nothing to copy.
+2. (Optional) Add the card from [`examples/dashboard.yaml`](examples/dashboard.yaml)
+   to a dashboard for a ready management panel.
+3. Pick a notebook in the **Active notebook** dropdown — every action runs on
+   it, **no IDs to type**.
+4. (Optional) Add automations from [`examples/automations.yaml`](examples/automations.yaml)
+   and voice sentences from [`examples/custom_sentences/`](examples/custom_sentences/).
 
 ## Installation
 
@@ -186,18 +189,18 @@ Generate a podcast, then act when it's ready:
 
 ## Voice (Assist)
 
-Ask your active notebook by voice and hear the answer back:
+The `NotebookLMAsk` intent is **built into the integration** — no script to copy.
+You only need to give Assist sentences that map to it:
 
-1. Install [`examples/notebooklm_package.yaml`](examples/notebooklm_package.yaml)
-   (it defines the `AskNotebook` intent).
-2. Copy the sentence files into your config:
+1. Copy the sentence files into your config:
    - [`examples/custom_sentences/en/notebooklm.yaml`](examples/custom_sentences/en/notebooklm.yaml) → `config/custom_sentences/en/notebooklm.yaml`
    - [`examples/custom_sentences/he/notebooklm.yaml`](examples/custom_sentences/he/notebooklm.yaml) → `config/custom_sentences/he/notebooklm.yaml`
-3. Restart, then say or type to Assist:
+2. Restart, then say or type to Assist:
    - **"ask my notebook &lt;anything&gt;"**
    - **"שאל את המחברת &lt;כל שאלה&gt;"**
 
-Assist runs `notebooklm.ask` on the **active notebook** and speaks the answer.
+It asks the **active notebook** and speaks the answer. (With an LLM-based Assist
+agent, the intent can be invoked without the sentence files.)
 
 ## FAQ
 

@@ -5,12 +5,11 @@ from __future__ import annotations
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
 from .coordinator import NotebookLMCoordinator
+from .entity import notebooklm_device_info
 
 
 async def async_setup_entry(
@@ -24,6 +23,7 @@ async def async_setup_entry(
         [
             NotebookLMAuthSensor(coordinator, entry),
             NotebookLMNotebooksSensor(coordinator, entry),
+            NotebookLMLastAnswerSensor(coordinator, entry),
         ]
     )
 
@@ -36,12 +36,7 @@ class _BaseSensor(CoordinatorEntity[NotebookLMCoordinator], SensorEntity):
     def __init__(self, coordinator: NotebookLMCoordinator, entry: ConfigEntry) -> None:
         super().__init__(coordinator)
         self._entry = entry
-        self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, entry.entry_id)},
-            name=entry.title or "NotebookLM",
-            manufacturer="Google (unofficial)",
-            model="NotebookLM",
-        )
+        self._attr_device_info = notebooklm_device_info(entry)
 
 
 class NotebookLMAuthSensor(_BaseSensor):
@@ -80,3 +75,29 @@ class NotebookLMNotebooksSensor(_BaseSensor):
     def extra_state_attributes(self) -> dict:
         data = self.coordinator.data or {}
         return {"notebooks": data.get("notebooks", [])}
+
+
+class NotebookLMLastAnswerSensor(_BaseSensor):
+    """Holds the most recent answer from the Ask button (full text in attrs)."""
+
+    _attr_translation_key = "last_answer"
+    _attr_icon = "mdi:message-text"
+
+    def __init__(self, coordinator: NotebookLMCoordinator, entry: ConfigEntry) -> None:
+        super().__init__(coordinator, entry)
+        self._attr_unique_id = f"{entry.entry_id}_last_answer"
+
+    @property
+    def native_value(self) -> str | None:
+        answer = self.coordinator.last_answer
+        if not answer:
+            return None
+        # HA caps state strings at 255 chars; keep the full text in attributes.
+        return answer[:252] + "…" if len(answer) > 255 else answer
+
+    @property
+    def extra_state_attributes(self) -> dict:
+        return {
+            "answer": self.coordinator.last_answer,
+            **(self.coordinator.last_answer_data or {}),
+        }

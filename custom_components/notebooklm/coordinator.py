@@ -58,9 +58,20 @@ class NotebookLMCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         # The notebook the services default to (driven by the select entity);
         # seeded from the configured default option.
         self.active_notebook_id: str | None = entry.options.get(CONF_DEFAULT_NOTEBOOK)
+        # Backing state for the built-in question box / ask button / answer
+        # sensor (these replace the old example helpers + script).
+        self.question: str = ""
+        self.last_answer: str | None = None
+        self.last_answer_data: dict[str, Any] | None = None
         # Whether the "sign-in required" notice is currently raised, so we alert
         # once per failure episode rather than on every poll.
         self._auth_expired_notified = False
+
+    def default_notebook(self) -> str | None:
+        """Resolve the notebook services/buttons act on when none is given."""
+        return self.active_notebook_id or self.config_entry.options.get(
+            CONF_DEFAULT_NOTEBOOK
+        )
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch the current notebook list; surface auth failures for reauth."""

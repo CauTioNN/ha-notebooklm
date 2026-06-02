@@ -10,6 +10,7 @@ from homeassistant.core import HomeAssistant
 from .api import NotebookLMApi
 from .const import DOMAIN, PLATFORMS
 from .coordinator import NotebookLMCoordinator
+from .intent import async_register_intents
 from .services import async_setup_services, async_unload_services
 
 _LOGGER = logging.getLogger(__name__)
@@ -29,6 +30,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: NotebookLMConfigEntry) -
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     async_setup_services(hass)
+    async_register_intents(hass)
 
     entry.async_on_unload(entry.add_update_listener(_async_reload_entry))
     return True

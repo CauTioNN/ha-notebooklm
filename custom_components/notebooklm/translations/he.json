@@ -51,10 +51,17 @@
   "entity": {
     "sensor": {
       "auth_status": { "name": "סטטוס התחברות" },
-      "notebooks": { "name": "מחברות" }
+      "notebooks": { "name": "מחברות" },
+      "last_answer": { "name": "תשובה אחרונה" }
     },
     "select": {
       "active_notebook": { "name": "מחברת פעילה" }
+    },
+    "text": {
+      "question": { "name": "שאלה" }
+    },
+    "button": {
+      "ask": { "name": "שאל" }
     }
   },
   "services": {

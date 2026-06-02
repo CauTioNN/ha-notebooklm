@@ -51,10 +51,17 @@
   "entity": {
     "sensor": {
       "auth_status": { "name": "Authentication status" },
-      "notebooks": { "name": "Notebooks" }
+      "notebooks": { "name": "Notebooks" },
+      "last_answer": { "name": "Last answer" }
     },
     "select": {
       "active_notebook": { "name": "Active notebook" }
+    },
+    "text": {
+      "question": { "name": "Question" }
+    },
+    "button": {
+      "ask": { "name": "Ask" }
     }
   },
   "services": {
