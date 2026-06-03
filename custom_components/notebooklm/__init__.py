@@ -10,6 +10,7 @@ from homeassistant.core import HomeAssistant
 from .api import NotebookLMApi
 from .const import DOMAIN, PLATFORMS
 from .coordinator import NotebookLMCoordinator
+from .documentation import DocSyncManager
 from .intent import async_register_intents
 from .services import async_setup_services, async_unload_services
 
@@ -25,6 +26,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: NotebookLMConfigEntry) -
 
     coordinator = NotebookLMCoordinator(hass, entry, api)
     await coordinator.async_config_entry_first_refresh()
+
+    coordinator.doc_sync = DocSyncManager(hass, entry, coordinator)
+    entry.async_on_unload(coordinator.doc_sync.async_shutdown)
 
     entry.runtime_data = coordinator
 

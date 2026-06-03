@@ -24,6 +24,13 @@ quizzes, reports, mind maps and more.
   - `text` **Question** + `button` **Ask** + `sensor` **Last answer** — a ready
     question→answer box.
   - `sensor` **Authentication status** and **Notebooks** (list in attributes).
+- **Self-documenting Home Assistant** 🏠 — export a scrubbed snapshot of your HA
+  (areas, entities, automations, scripts, scenes, helpers, integrations) into a
+  notebook and **ask grounded questions about your own smart home** ("where is
+  the media player?", "how do I enable Shabbat mode?"). Pick which sections to
+  export, choose/create a target notebook, and set an auto-sync schedule. Adds a
+  `select` **Documentation sync schedule**, a `button` **Sync documentation
+  now**, and a `sensor` **Documentation last synced**.
 - **Voice (Assist)** — a `NotebookLMAsk` intent is registered in code; ask your
   notebook by voice and hear the answer.
 - **A full service set**, designed to be automation-friendly (a configurable
@@ -99,9 +106,43 @@ automatically starts **re-authentication** — just repeat either method.
 
 After setup, open the integration's **Configure** dialog to set:
 
-- **Default notebook** — used by every service when you omit `notebook_id`, so
-  automations can stay short.
-- **Update interval** — how often the notebook list / auth status refresh.
+- **General**
+  - **Default notebook** — used by every service when you omit `notebook_id`, so
+    automations can stay short.
+  - **Update interval** — how often the notebook list / auth status refresh.
+- **Self-documenting Home Assistant** — see below.
+
+## Self-documenting Home Assistant
+
+Turn your Home Assistant into a notebook you can question. The integration
+exports a Markdown snapshot of your setup and syncs it into a NotebookLM
+notebook; the existing `notebooklm.ask` service (and the **Ask** box / voice
+intent) then answer questions **grounded in your actual config, with citations**
+— about *your* home, not a generic guess.
+
+**No AI required.** The export is purely mechanical (it reads HA's registries
+and states). NotebookLM itself is the AI — so there's no local LLM, no API key,
+and no extra cost beyond your Google account.
+
+**Set it up:** integration → **Configure** → **Self-documenting Home Assistant**:
+
+- **Documentation notebook** — pick an existing notebook, or type a name to
+  **create a new one**.
+- **Sections to export** — tick the parts you want: Overview, Areas & Devices,
+  Entities, Automations, Scripts, Scenes, Helpers, Integrations.
+- **Scrub** — emails, IP addresses and long tokens are redacted from values.
+  Sensitive keys (passwords, **coordinates**, tokens, cookies) are **always**
+  removed regardless — nothing private leaves the building.
+
+**Updates, not duplicates.** Each section is one source titled e.g.
+`🏠 HA · Automations`. A re-sync **deletes the previous version and re-adds it**,
+so you always have exactly one current source per section — it never piles up
+duplicates.
+
+**Keep it fresh:** set the **Documentation sync schedule** entity to *Manual*,
+*Daily*, *Every 3 days*, *Weekly* or *Monthly*, press **Sync documentation now**
+for an immediate run, or call `notebooklm.sync_documentation` from an automation.
+The **Documentation last synced** sensor shows the timestamp plus status.
 
 ## Services (actions)
 
@@ -125,6 +166,7 @@ accounts) and an optional `notebook_id` (falls back to the default notebook).
 | `notebooklm.generate_slide_deck` / `generate_infographic` | Slides / infographic | `task_id` |
 | `notebooklm.generate_data_table` / `generate_mind_map` | Data table / mind map | `task_id` / `note_id` |
 | `notebooklm.download` | Download an artifact to a file | `path` |
+| `notebooklm.sync_documentation` | Export & sync the HA snapshot (no duplicates) | `sources_written` |
 
 Long generations are **fire-and-forget**: the service returns a `task_id`
 immediately and fires an event when finished (pass `wait: true` to block and
@@ -135,6 +177,7 @@ get the download URL in the response instead).
 - `notebooklm_artifact_ready` — `{notebook_id, artifact_type, artifact_id, url}`
 - `notebooklm_artifact_failed` — `{notebook_id, artifact_type, artifact_id, error}`
 - `notebooklm_source_added` — `{notebook_id, source_id, title}`
+- `notebooklm_documentation_synced` — `{entry_id, notebook_id, categories, sources_written, status, error}`
 - `notebooklm_auth_expired` — `{entry_id, account, detail}` — fired when the
   stored Google session expires and can't be refreshed. A persistent
   notification is raised automatically; wire this event to push it to your

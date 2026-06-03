@@ -3,10 +3,10 @@ slug: notebooklm_login
 version: "0.2.0"
 description: Interactive Google sign-in for the NotebookLM integration (runs Chromium inside Home Assistant).
 url: https://github.com/CauTioNN/ha-notebooklm
-# When installed from a repository, Home Assistant pulls this prebuilt image
-# instead of building locally. (Ignored for local /addons installs, which always
-# build from the Dockerfile.) GHCR image names must be lowercase.
-image: ghcr.io/cautionn/ha-notebooklm/{arch}-addon-notebooklm_login
+# No prebuilt `image:` — Home Assistant builds the add-on from the Dockerfile.
+# (A local /addons install with an `image:` set makes the Supervisor try to PULL
+# that image and fail if it isn't published. Re-add an `image:` line only once a
+# prebuilt image is actually published to GHCR for repository-based installs.)
 arch:
   - aarch64
   - amd64

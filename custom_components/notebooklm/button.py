@@ -29,8 +29,13 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the ask button."""
-    async_add_entities([NotebookLMAskButton(entry.runtime_data, entry)])
+    """Set up the ask and documentation-sync buttons."""
+    async_add_entities(
+        [
+            NotebookLMAskButton(entry.runtime_data, entry),
+            NotebookLMSyncDocsButton(entry.runtime_data, entry),
+        ]
+    )
 
 
 class NotebookLMAskButton(ButtonEntity):
@@ -83,4 +88,33 @@ class NotebookLMAskButton(ButtonEntity):
             result.answer,
             title="NotebookLM",
             notification_id=f"{DOMAIN}_answer_{self._coordinator.config_entry.entry_id}",
+        )
+
+
+class NotebookLMSyncDocsButton(ButtonEntity):
+    """Export the HA snapshot and sync it into the documentation notebook now."""
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "sync_documentation"
+    _attr_icon = "mdi:home-sync"
+
+    def __init__(self, coordinator: NotebookLMCoordinator, entry: ConfigEntry) -> None:
+        self._coordinator = coordinator
+        self._attr_unique_id = f"{entry.entry_id}_sync_documentation"
+        self._attr_device_info = notebooklm_device_info(entry)
+
+    async def async_press(self) -> None:
+        manager = self._coordinator.doc_sync
+        if manager is None:
+            raise HomeAssistantError("Documentation sync is not ready yet")
+
+        result = await manager.async_sync()
+        persistent_notification.async_create(
+            self._coordinator.hass,
+            (
+                f"Synced {result['sources_written']} section(s) "
+                f"({', '.join(result['categories'])}) into your documentation notebook."
+            ),
+            title="NotebookLM: documentation synced",
+            notification_id=f"{DOMAIN}_docsync_{self._coordinator.config_entry.entry_id}",
         )

@@ -468,6 +468,32 @@ generate_mind_map:
       selector:
         text:
 
+sync_documentation:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    categories:
+      required: false
+      selector:
+        select:
+          multiple: true
+          options:
+            - overview
+            - areas
+            - entities
+            - automations
+            - scripts
+            - scenes
+            - helpers
+            - integrations
+
 download:
   fields:
     config_entry_id:

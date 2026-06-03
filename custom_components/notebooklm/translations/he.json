@@ -37,6 +37,13 @@
     "step": {
       "init": {
         "title": "הגדרות NotebookLM",
+        "menu_options": {
+          "general": "כללי (מחברת ברירת מחדל, מרווח עדכון)",
+          "documentation": "Home Assistant שמתעד את עצמו"
+        }
+      },
+      "general": {
+        "title": "הגדרות כלליות",
         "data": {
           "default_notebook": "מחברת ברירת מחדל",
           "scan_interval": "מרווח עדכון (שניות)"
@@ -45,23 +52,55 @@
           "default_notebook": "ישמש בשירותים כשלא צוין notebook_id.",
           "scan_interval": "כל כמה זמן לרענן את רשימת המחברות וסטטוס ההתחברות."
         }
+      },
+      "documentation": {
+        "title": "Home Assistant שמתעד את עצמו",
+        "description": "ייצוא תמונת מצב של ה-Home Assistant שלך (אזורים, ישויות, אוטומציות, …) למחברת NotebookLM, כדי שתוכל לשאול שאלות מבוססות על הבית החכם שלך עצמו. סנכרון חוזר מחליף כל קטע — אף פעם לא יוצר כפילויות. סודות, קואורדינטות וטוקנים מנוקים לפני ההעלאה.",
+        "data": {
+          "doc_notebook": "מחברת התיעוד",
+          "create_notebook": "…או צור מחברת חדשה בשם",
+          "doc_categories": "קטעים לייצוא",
+          "doc_scrub": "ניקוי אימיילים / כתובות IP / טוקנים מתוך ערכים"
+        },
+        "data_description": {
+          "doc_notebook": "לאן מסנכרנים את תמונת המצב. בחר מחברת קיימת (או מלא את השדה למטה כדי ליצור חדשה).",
+          "create_notebook": "אם מולא, נוצרת מחברת חדשה והיא תשמש במקום הבחירה למעלה.",
+          "doc_categories": "רק הקטעים המסומנים מיוצאים ונשמרים מסונכרנים.",
+          "doc_scrub": "מפתחות רגישים (סיסמאות, קואורדינטות, טוקנים) תמיד מוסרים; זה גם מנקה אימיילים, כתובות IP וטוקנים ארוכים שנמצאים בתוך ערכי טקסט חופשי."
+        }
       }
+    },
+    "error": {
+      "not_loaded": "האינטגרציה עדיין לא נטענה. נסה שוב בעוד רגע.",
+      "create_failed": "לא ניתן ליצור את המחברת. בדוק את החיבור ונסה שוב."
     }
   },
   "entity": {
     "sensor": {
       "auth_status": { "name": "סטטוס התחברות" },
       "notebooks": { "name": "מחברות" },
-      "last_answer": { "name": "תשובה אחרונה" }
+      "last_answer": { "name": "תשובה אחרונה" },
+      "documentation": { "name": "תיעוד סונכרן לאחרונה" }
     },
     "select": {
-      "active_notebook": { "name": "מחברת פעילה" }
+      "active_notebook": { "name": "מחברת פעילה" },
+      "doc_schedule": {
+        "name": "תזמון סנכרון תיעוד",
+        "state": {
+          "manual": "ידני בלבד",
+          "daily": "כל יום",
+          "every_3_days": "כל 3 ימים",
+          "weekly": "כל שבוע",
+          "monthly": "כל חודש"
+        }
+      }
     },
     "text": {
       "question": { "name": "שאלה" }
     },
     "button": {
-      "ask": { "name": "שאל" }
+      "ask": { "name": "שאל" },
+      "sync_documentation": { "name": "סנכרן תיעוד עכשיו" }
     }
   },
   "services": {
@@ -257,6 +296,15 @@
         "output_path": { "name": "נתיב יעד", "description": "נתיב יעד בתוך תיקייה מורשית." },
         "artifact_id": { "name": "מזהה תוצר", "description": "תוצר ספציפי (ברירת מחדל: האחרון)." },
         "format": { "name": "פורמט", "description": "פורמט ייצוא (לדוגמה json, markdown, pptx, csv)." }
+      }
+    },
+    "sync_documentation": {
+      "name": "סנכרון תיעוד Home Assistant",
+      "description": "ייצוא תמונת מצב מנוקה של Home Assistant וסנכרונה למחברת התיעוד. מחליף כל קטע במקומו (בלי כפילויות).",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון NotebookLM להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "מחברת יעד (ברירת מחדל: מחברת התיעוד שהוגדרה)." },
+        "categories": { "name": "קטעים", "description": "אילו קטעים לייצא (ברירת מחדל: הסט שהוגדר)." }
       }
     }
   }

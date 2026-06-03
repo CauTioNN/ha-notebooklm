@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import timedelta
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from homeassistant.components import persistent_notification
 from homeassistant.config_entries import ConfigEntry
@@ -22,6 +22,9 @@ from .const import (
     DOMAIN,
     EVENT_AUTH_EXPIRED,
 )
+
+if TYPE_CHECKING:
+    from .documentation import DocSyncManager
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -66,6 +69,8 @@ class NotebookLMCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         # Whether the "sign-in required" notice is currently raised, so we alert
         # once per failure episode rather than on every poll.
         self._auth_expired_notified = False
+        # Self-documenting-HA sync manager (wired up in async_setup_entry).
+        self.doc_sync: DocSyncManager | None = None
 
     def default_notebook(self) -> str | None:
         """Resolve the notebook services/buttons act on when none is given."""

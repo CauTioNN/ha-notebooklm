@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from homeassistant.components.sensor import SensorEntity
+from datetime import datetime
+
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -24,6 +26,7 @@ async def async_setup_entry(
             NotebookLMAuthSensor(coordinator, entry),
             NotebookLMNotebooksSensor(coordinator, entry),
             NotebookLMLastAnswerSensor(coordinator, entry),
+            NotebookLMDocumentationSensor(coordinator, entry),
         ]
     )
 
@@ -100,4 +103,35 @@ class NotebookLMLastAnswerSensor(_BaseSensor):
         return {
             "answer": self.coordinator.last_answer,
             **(self.coordinator.last_answer_data or {}),
+        }
+
+
+class NotebookLMDocumentationSensor(_BaseSensor):
+    """Reports when the HA documentation was last synced, plus its status."""
+
+    _attr_translation_key = "documentation"
+    _attr_icon = "mdi:home-search"
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+
+    def __init__(self, coordinator: NotebookLMCoordinator, entry: ConfigEntry) -> None:
+        super().__init__(coordinator, entry)
+        self._attr_unique_id = f"{entry.entry_id}_documentation"
+
+    @property
+    def native_value(self) -> datetime | None:
+        manager = self.coordinator.doc_sync
+        return manager.last_sync if manager else None
+
+    @property
+    def extra_state_attributes(self) -> dict:
+        manager = self.coordinator.doc_sync
+        if manager is None:
+            return {}
+        return {
+            "status": manager.last_status,
+            "error": manager.last_error,
+            "schedule": manager.schedule,
+            "notebook_id": manager.configured_notebook(),
+            "categories": manager.last_categories or manager.configured_categories(),
+            "sources_written": manager.last_source_count,
         }

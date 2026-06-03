@@ -25,6 +25,7 @@ from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import config_validation as cv
 
 from .const import (
+    DOC_CATEGORIES,
     DOMAIN,
     EVENT_ARTIFACT_FAILED,
     EVENT_ARTIFACT_READY,
@@ -267,6 +268,18 @@ def async_setup_services(hass: HomeAssistant) -> None:
             ],
         }
 
+    # ------------------------------------------------------------ documentation
+    @_wrap_errors
+    async def sync_documentation(call: ServiceCall) -> ServiceResponse:
+        coordinator = _resolve_coordinator(hass, call)
+        manager = coordinator.doc_sync
+        if manager is None:
+            raise HomeAssistantError("Documentation sync is not ready yet")
+        return await manager.async_sync(
+            notebook_id=call.data.get(ATTR_NOTEBOOK_ID),
+            categories=call.data.get("categories"),
+        )
+
     # ------------------------------------------------------------------- generate
     def _make_generate(kind: str):
         method_name, artifact_type, opt_map = _GENERATE_SPECS[kind]
@@ -434,6 +447,13 @@ def async_setup_services(hass: HomeAssistant) -> None:
         ),
         supports_response=SupportsResponse.OPTIONAL,
     )
+    hass.services.async_register(
+        DOMAIN, "sync_documentation", sync_documentation,
+        schema=vol.Schema(
+            {**_NB, vol.Optional("categories"): [vol.In(DOC_CATEGORIES)]}
+        ),
+        supports_response=SupportsResponse.OPTIONAL,
+    )
 
 
 def async_unload_services(hass: HomeAssistant) -> None:
@@ -441,7 +461,7 @@ def async_unload_services(hass: HomeAssistant) -> None:
     services = [
         "create_notebook", "delete_notebook", "list_notebooks", "add_url",
         "add_text", "add_file", "add_research", "ask", "generate_mind_map",
-        "download", *_GENERATE_SPECS,
+        "download", "sync_documentation", *_GENERATE_SPECS,
     ]
     for service in services:
         hass.services.async_remove(DOMAIN, service)

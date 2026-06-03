@@ -37,6 +37,13 @@
     "step": {
       "init": {
         "title": "NotebookLM options",
+        "menu_options": {
+          "general": "General (default notebook, update interval)",
+          "documentation": "Self-documenting Home Assistant"
+        }
+      },
+      "general": {
+        "title": "General options",
         "data": {
           "default_notebook": "Default notebook",
           "scan_interval": "Update interval (seconds)"
@@ -45,23 +52,55 @@
           "default_notebook": "Used by services when no notebook_id is supplied.",
           "scan_interval": "How often to refresh the notebook list and auth status."
         }
+      },
+      "documentation": {
+        "title": "Self-documenting Home Assistant",
+        "description": "Export a snapshot of your Home Assistant (areas, entities, automations, …) into a NotebookLM notebook so you can ask grounded questions about your own smart home. Re-syncing replaces each section — it never creates duplicates. Secrets, coordinates and tokens are scrubbed before upload.",
+        "data": {
+          "doc_notebook": "Documentation notebook",
+          "create_notebook": "…or create a new notebook named",
+          "doc_categories": "Sections to export",
+          "doc_scrub": "Scrub emails / IPs / tokens from values"
+        },
+        "data_description": {
+          "doc_notebook": "Where the snapshot is synced. Pick an existing notebook (or fill the field below to create one).",
+          "create_notebook": "If set, a new notebook is created and used instead of the choice above.",
+          "doc_categories": "Only the ticked sections are exported and kept in sync.",
+          "doc_scrub": "Sensitive keys (passwords, coordinates, tokens) are always removed; this also redacts emails, IP addresses and long tokens found inside free-text values."
+        }
       }
+    },
+    "error": {
+      "not_loaded": "The integration is not loaded yet. Try again in a moment.",
+      "create_failed": "Could not create the notebook. Check your connection and try again."
     }
   },
   "entity": {
     "sensor": {
       "auth_status": { "name": "Authentication status" },
       "notebooks": { "name": "Notebooks" },
-      "last_answer": { "name": "Last answer" }
+      "last_answer": { "name": "Last answer" },
+      "documentation": { "name": "Documentation last synced" }
     },
     "select": {
-      "active_notebook": { "name": "Active notebook" }
+      "active_notebook": { "name": "Active notebook" },
+      "doc_schedule": {
+        "name": "Documentation sync schedule",
+        "state": {
+          "manual": "Manual only",
+          "daily": "Every day",
+          "every_3_days": "Every 3 days",
+          "weekly": "Every week",
+          "monthly": "Every month"
+        }
+      }
     },
     "text": {
       "question": { "name": "Question" }
     },
     "button": {
-      "ask": { "name": "Ask" }
+      "ask": { "name": "Ask" },
+      "sync_documentation": { "name": "Sync documentation now" }
     }
   },
   "services": {
@@ -257,6 +296,15 @@
         "output_path": { "name": "Output path", "description": "Destination path inside an allowed directory." },
         "artifact_id": { "name": "Artifact ID", "description": "Specific artifact (defaults to the latest)." },
         "format": { "name": "Format", "description": "Optional export format (e.g. json, markdown, pptx, csv)." }
+      }
+    },
+    "sync_documentation": {
+      "name": "Sync Home Assistant documentation",
+      "description": "Export a scrubbed snapshot of Home Assistant and sync it into the documentation notebook. Replaces each section in place (no duplicates).",
+      "fields": {
+        "config_entry_id": { "name": "Account", "description": "Which NotebookLM account to use." },
+        "notebook_id": { "name": "Notebook ID", "description": "Target notebook (defaults to the configured documentation notebook)." },
+        "categories": { "name": "Sections", "description": "Which sections to export (defaults to the configured set)." }
       }
     }
   }
