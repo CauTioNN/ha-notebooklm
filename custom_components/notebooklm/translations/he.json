@@ -1,0 +1,313 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "NotebookLM",
+        "description": "בחר כיצד להתחבר לחשבון Google NotebookLM שלך.",
+        "menu_options": {
+          "google": "התחברות דרך Google (דרך תוסף, מתוך Home Assistant)",
+          "manual": "הדבקת פרטי התחברות (storage_state.json)"
+        }
+      },
+      "manual": {
+        "title": "הדבקת פרטי התחברות",
+        "description": "במחשב שלך הרץ `notebooklm login`, ואז הדבק כאן את כל התוכן של `~/.notebooklm/profiles/default/storage_state.json`.",
+        "data": {
+          "storage_state": "תוכן storage_state.json"
+        }
+      },
+      "google": {
+        "title": "התחברות דרך Google",
+        "description": "1. התקן והפעל את התוסף **NotebookLM Login**.\n2. פתח את ה-Web UI שלו והשלם את ההתחברות ל-Google.\n3. כשמדווח על הצלחה, לחץ **שלח** כאן לסיום."
+      },
+      "notebook": {
+        "title": "בחירת מחברת ברירת מחדל",
+        "description": "כל פעולה (כפתור 'שאל', פקודת הקול והשירותים) פועלת על מחברת ברירת מחדל, כך שלעולם אינך מקליד מזהה. בחר אחת — או הקלד שם למטה כדי ליצור מחברת חדשה.",
+        "data": {
+          "default_notebook": "מחברת ברירת מחדל",
+          "create_notebook": "…או צור מחברת חדשה בשם"
+        }
+      }
+    },
+    "error": {
+      "invalid_storage_state": "זהו אינו storage_state.json תקין (חסר השדה 'cookies').",
+      "invalid_auth": "פרטי ההתחברות נדחו על ידי NotebookLM. התחבר מחדש והעתק storage_state.json טרי.",
+      "cannot_connect": "לא ניתן להתחבר ל-NotebookLM. בדוק את החיבור ונסה שוב.",
+      "addon_result_missing": "עדיין לא נמצאה תוצאת התחברות. השלם תחילה את ההתחברות ל-Google בתוסף.",
+      "notebook_required": "בחר מחברת קיימת או הקלד שם כדי ליצור אחת.",
+      "create_failed": "לא ניתן ליצור את המחברת. בדוק את החיבור ונסה שוב."
+    },
+    "abort": {
+      "already_configured": "חשבון NotebookLM זה כבר מוגדר.",
+      "reauth_successful": "ההתחברות מחדש הצליחה.",
+      "wrong_account": "פרטי ההתחברות שייכים לחשבון Google אחר מזה של הרשומה."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "הגדרות NotebookLM",
+        "menu_options": {
+          "general": "כללי (מחברת ברירת מחדל, מרווח עדכון)",
+          "documentation": "Home Assistant שמתעד את עצמו"
+        }
+      },
+      "general": {
+        "title": "הגדרות כלליות",
+        "data": {
+          "default_notebook": "מחברת ברירת מחדל",
+          "scan_interval": "מרווח עדכון (שניות)"
+        },
+        "data_description": {
+          "default_notebook": "ישמש בשירותים כשלא צוין notebook_id.",
+          "scan_interval": "כל כמה זמן לרענן את רשימת המחברות וסטטוס ההתחברות."
+        }
+      },
+      "documentation": {
+        "title": "Home Assistant שמתעד את עצמו",
+        "description": "ייצוא תמונת מצב של ה-Home Assistant שלך (אזורים, ישויות, אוטומציות, …) למחברת NotebookLM, כדי שתוכל לשאול שאלות מבוססות על הבית החכם שלך עצמו. סנכרון חוזר מחליף כל קטע — אף פעם לא יוצר כפילויות. סודות, קואורדינטות וטוקנים מנוקים לפני ההעלאה.",
+        "data": {
+          "doc_notebook": "מחברת התיעוד",
+          "create_notebook": "…או צור מחברת חדשה בשם",
+          "doc_categories": "קטעים לייצוא",
+          "doc_scrub": "ניקוי אימיילים / כתובות IP / טוקנים מתוך ערכים"
+        },
+        "data_description": {
+          "doc_notebook": "לאן מסנכרנים את תמונת המצב. בחר מחברת קיימת (או מלא את השדה למטה כדי ליצור חדשה).",
+          "create_notebook": "אם מולא, נוצרת מחברת חדשה והיא תשמש במקום הבחירה למעלה.",
+          "doc_categories": "רק הקטעים המסומנים מיוצאים ונשמרים מסונכרנים.",
+          "doc_scrub": "מפתחות רגישים (סיסמאות, קואורדינטות, טוקנים) תמיד מוסרים; זה גם מנקה אימיילים, כתובות IP וטוקנים ארוכים שנמצאים בתוך ערכי טקסט חופשי."
+        }
+      }
+    },
+    "error": {
+      "not_loaded": "האינטגרציה עדיין לא נטענה. נסה שוב בעוד רגע.",
+      "create_failed": "לא ניתן ליצור את המחברת. בדוק את החיבור ונסה שוב.",
+      "doc_notebook_required": "בחר מחברת תיעוד או הקלד שם כדי ליצור אחת."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "auth_status": { "name": "סטטוס התחברות" },
+      "notebooks": { "name": "מחברות" },
+      "last_answer": { "name": "תשובה אחרונה" },
+      "documentation": { "name": "תיעוד סונכרן לאחרונה" }
+    },
+    "select": {
+      "active_notebook": { "name": "מחברת פעילה" },
+      "doc_schedule": {
+        "name": "תזמון סנכרון תיעוד",
+        "state": {
+          "manual": "ידני בלבד",
+          "daily": "כל יום",
+          "every_3_days": "כל 3 ימים",
+          "weekly": "כל שבוע",
+          "monthly": "כל חודש"
+        }
+      }
+    },
+    "text": {
+      "question": { "name": "שאלה" }
+    },
+    "button": {
+      "ask": { "name": "שאל" },
+      "sync_documentation": { "name": "סנכרן תיעוד עכשיו" }
+    }
+  },
+  "services": {
+    "create_notebook": {
+      "name": "יצירת מחברת",
+      "description": "יצירת מחברת NotebookLM חדשה.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון NotebookLM להשתמש (לא חובה אם יש רק אחד)." },
+        "title": { "name": "כותרת", "description": "כותרת המחברת החדשה." }
+      }
+    },
+    "delete_notebook": {
+      "name": "מחיקת מחברת",
+      "description": "מחיקת מחברת.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת למחיקה (ברירת מחדל: המחברת שהוגדרה)." }
+      }
+    },
+    "list_notebooks": {
+      "name": "רשימת מחברות",
+      "description": "החזרת כל המחברות בחשבון.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." }
+      }
+    },
+    "add_url": {
+      "name": "הוספת מקור: כתובת",
+      "description": "הוספת דף אינטרנט או כתובת YouTube כמקור.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד (ברירת מחדל: המוגדרת)." },
+        "url": { "name": "כתובת", "description": "הכתובת להוספה." },
+        "wait": { "name": "המתנה", "description": "להמתין עד שהמקור יעובד." }
+      }
+    },
+    "add_text": {
+      "name": "הוספת מקור: טקסט",
+      "description": "הוספת טקסט מודבק כמקור.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "title": { "name": "כותרת", "description": "כותרת המקור." },
+        "content": { "name": "תוכן", "description": "תוכן הטקסט." }
+      }
+    },
+    "add_research": {
+      "name": "הוספת מחקר רשת/Drive",
+      "description": "הרצת שאילתת מחקר וייבוא המקורות שנמצאו.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "query": { "name": "שאילתה", "description": "שאילתת המחקר." },
+        "source": { "name": "מקור", "description": "חיפוש ברשת או ב-Google Drive." },
+        "mode": { "name": "מצב", "description": "fast (מהיר) או deep (מקיף)." }
+      }
+    },
+    "ask": {
+      "name": "שאל שאלה",
+      "description": "שאל את המחברת שאלה וקבל את התשובה.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "question": { "name": "שאלה", "description": "השאלה לשאול." },
+        "conversation_id": { "name": "מזהה שיחה", "description": "המשך שיחה קיימת (לא חובה)." }
+      }
+    },
+    "generate_audio": {
+      "name": "יצירת סקירת אודיו (פודקאסט)",
+      "description": "יצירת סקירת אודיו. מפעיל אירוע notebooklm_artifact_ready בסיום.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "instructions": { "name": "הנחיות", "description": "הנחיות הכוונה (לא חובה)." },
+        "language": { "name": "שפה", "description": "קוד שפת פלט (לדוגמה en, he)." },
+        "format": { "name": "פורמט", "description": "deep-dive, brief, critique או debate." },
+        "length": { "name": "אורך", "description": "short, default או long." },
+        "wait": { "name": "המתנה", "description": "לחסום עד הסיום ולהחזיר כתובת הורדה." }
+      }
+    },
+    "generate_video": {
+      "name": "יצירת סקירת וידאו",
+      "description": "יצירת סקירת וידאו. מפעיל אירוע notebooklm_artifact_ready בסיום.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "instructions": { "name": "הנחיות", "description": "הנחיות הכוונה (לא חובה)." },
+        "language": { "name": "שפה", "description": "קוד שפת פלט." },
+        "format": { "name": "פורמט", "description": "explainer או brief." },
+        "style": { "name": "סגנון", "description": "סגנון חזותי." },
+        "wait": { "name": "המתנה", "description": "לחסום עד הסיום." }
+      }
+    },
+    "generate_quiz": {
+      "name": "יצירת מבחן",
+      "description": "יצירת מבחן ממקורות המחברת.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "instructions": { "name": "הנחיות", "description": "הנחיות (לא חובה)." },
+        "difficulty": { "name": "רמת קושי", "description": "easy, medium או hard." },
+        "quantity": { "name": "כמות", "description": "fewer, standard או more." },
+        "wait": { "name": "המתנה", "description": "לחסום עד הסיום." }
+      }
+    },
+    "generate_flashcards": {
+      "name": "יצירת כרטיסיות",
+      "description": "יצירת כרטיסיות ממקורות המחברת.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "instructions": { "name": "הנחיות", "description": "הנחיות (לא חובה)." },
+        "difficulty": { "name": "רמת קושי", "description": "easy, medium או hard." },
+        "quantity": { "name": "כמות", "description": "fewer, standard או more." },
+        "wait": { "name": "המתנה", "description": "לחסום עד הסיום." }
+      }
+    },
+    "generate_report": {
+      "name": "יצירת דוח",
+      "description": "יצירת דוח (briefing doc, study guide, blog post).",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "instructions": { "name": "הנחיות", "description": "הנחיות (לא חובה)." },
+        "language": { "name": "שפה", "description": "קוד שפת פלט." },
+        "format": { "name": "פורמט", "description": "briefing-doc, study-guide או blog-post." },
+        "wait": { "name": "המתנה", "description": "לחסום עד הסיום." }
+      }
+    },
+    "generate_slide_deck": {
+      "name": "יצירת מצגת",
+      "description": "יצירת מצגת שקופיות.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "instructions": { "name": "הנחיות", "description": "הנחיות (לא חובה)." },
+        "language": { "name": "שפה", "description": "קוד שפת פלט." },
+        "format": { "name": "פורמט", "description": "detailed או presenter." },
+        "length": { "name": "אורך", "description": "default או short." },
+        "wait": { "name": "המתנה", "description": "לחסום עד הסיום." }
+      }
+    },
+    "generate_infographic": {
+      "name": "יצירת אינפוגרפיקה",
+      "description": "יצירת אינפוגרפיקה.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "instructions": { "name": "הנחיות", "description": "הנחיות (לא חובה)." },
+        "language": { "name": "שפה", "description": "קוד שפת פלט." },
+        "orientation": { "name": "כיוון", "description": "landscape, portrait או square." },
+        "detail": { "name": "רמת פירוט", "description": "concise, standard או detailed." },
+        "wait": { "name": "המתנה", "description": "לחסום עד הסיום." }
+      }
+    },
+    "generate_data_table": {
+      "name": "יצירת טבלת נתונים",
+      "description": "יצירת טבלת נתונים ממקורות המחברת.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "instructions": { "name": "הנחיות", "description": "תאר את הטבלה הרצויה." },
+        "language": { "name": "שפה", "description": "קוד שפת פלט." },
+        "wait": { "name": "המתנה", "description": "לחסום עד הסיום." }
+      }
+    },
+    "generate_mind_map": {
+      "name": "יצירת מפת חשיבה",
+      "description": "יצירת מפת חשיבה (נוצרת סינכרונית).",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "instructions": { "name": "הנחיות", "description": "הנחיות (לא חובה)." },
+        "language": { "name": "שפה", "description": "קוד שפת פלט." }
+      }
+    },
+    "download": {
+      "name": "הורדת תוצר",
+      "description": "הורדת תוצר שנוצר לקובץ בתוך Home Assistant.",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "המחברת היעד." },
+        "artifact_type": { "name": "סוג", "description": "איזה סוג תוצר להוריד." },
+        "output_path": { "name": "נתיב יעד", "description": "נתיב יעד בתוך תיקייה מורשית." },
+        "artifact_id": { "name": "מזהה תוצר", "description": "תוצר ספציפי (ברירת מחדל: האחרון)." },
+        "format": { "name": "פורמט", "description": "פורמט ייצוא (לדוגמה json, markdown, pptx, csv)." }
+      }
+    },
+    "sync_documentation": {
+      "name": "סנכרון תיעוד Home Assistant",
+      "description": "ייצוא תמונת מצב מנוקה של Home Assistant וסנכרונה למחברת התיעוד. מחליף כל קטע במקומו (בלי כפילויות).",
+      "fields": {
+        "config_entry_id": { "name": "חשבון", "description": "באיזה חשבון NotebookLM להשתמש." },
+        "notebook_id": { "name": "מזהה מחברת", "description": "מחברת יעד (ברירת מחדל: מחברת התיעוד שהוגדרה)." },
+        "categories": { "name": "קטעים", "description": "אילו קטעים לייצא (ברירת מחדל: הסט שהוגדר)." }
+      }
+    }
+  }
+}

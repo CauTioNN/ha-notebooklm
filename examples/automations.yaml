@@ -1,0 +1,45 @@
+# Optional example automations for NotebookLM.
+# The question box, "Ask" button, "Last answer" sensor and the voice intent are
+# now built into the integration — you do NOT need a package for those.
+#
+# Paste these under Settings → Automations (in YAML mode), or into your
+# automations.yaml. Adjust entity ids / notify target / time to taste.
+
+# 1) Notify when a long generation (podcast, video, …) finishes.
+- alias: "NotebookLM: artifact ready"
+  triggers:
+    - trigger: event
+      event_type: notebooklm_artifact_ready
+  actions:
+    - action: persistent_notification.create
+      data:
+        title: "NotebookLM: {{ trigger.event.data.artifact_type }} ready"
+        message: >-
+          Your {{ trigger.event.data.artifact_type }} is ready.
+          {% if trigger.event.data.url %}[Download]({{ trigger.event.data.url }}){% endif %}
+
+# 2) Push a phone alert if the Google session expires.
+- alias: "NotebookLM: signed out"
+  triggers:
+    - trigger: event
+      event_type: notebooklm_auth_expired
+  actions:
+    - action: notify.persistent_notification
+      data:
+        title: "NotebookLM signed out"
+        message: "Open the NotebookLM Login add-on (or re-paste credentials) to sign in again."
+
+# 3) Daily spoken briefing from the active notebook.
+- alias: "NotebookLM: morning briefing"
+  triggers:
+    - trigger: time
+      at: "07:30:00"
+  actions:
+    - action: notebooklm.ask
+      data:
+        question: "Give me a 3-sentence briefing of the most important points."
+      response_variable: nb
+    - action: notify.persistent_notification
+      data:
+        title: "Morning briefing"
+        message: "{{ nb.answer }}"

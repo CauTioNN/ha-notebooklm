@@ -1,0 +1,15 @@
+# Custom Assist sentences (English) for asking the active NotebookLM notebook.
+# Install: copy to  config/custom_sentences/en/notebooklm.yaml  and restart.
+# Then just say / type to Assist:  "ask my notebook <anything>"
+language: en
+intents:
+  NotebookLMAsk:
+    data:
+      - sentences:
+          - "ask my notebook {question}"
+          - "ask notebook {question}"
+          - "ask my notes {question}"
+          - "ask notebook lm {question}"
+lists:
+  question:
+    wildcard: true

@@ -1,0 +1,15 @@
+# משפטי Assist מותאמים (עברית) לשאילת המחברת הפעילה ב-NotebookLM.
+# התקנה: העתק ל-  config/custom_sentences/he/notebooklm.yaml  ואתחל.
+# אחר כך פשוט אמור/הקלד ל-Assist:  "שאל את המחברת <כל דבר>"
+language: he
+intents:
+  NotebookLMAsk:
+    data:
+      - sentences:
+          - "שאל את המחברת {question}"
+          - "תשאל את המחברת {question}"
+          - "שאלה למחברת {question}"
+          - "שאל את הפנקס {question}"
+lists:
+  question:
+    wildcard: true

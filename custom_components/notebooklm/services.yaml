@@ -1,0 +1,517 @@
+create_notebook:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    title:
+      required: true
+      example: "My Research"
+      selector:
+        text:
+
+delete_notebook:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      example: "abc123def456"
+      selector:
+        text:
+
+list_notebooks:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+
+add_url:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    url:
+      required: true
+      example: "https://en.wikipedia.org/wiki/Artificial_intelligence"
+      selector:
+        text:
+    wait:
+      required: false
+      default: false
+      selector:
+        boolean:
+
+add_text:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    title:
+      required: true
+      selector:
+        text:
+    content:
+      required: true
+      selector:
+        text:
+          multiline: true
+
+add_research:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    query:
+      required: true
+      selector:
+        text:
+    source:
+      required: false
+      default: web
+      selector:
+        select:
+          options:
+            - web
+            - drive
+    mode:
+      required: false
+      default: fast
+      selector:
+        select:
+          options:
+            - fast
+            - deep
+
+ask:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    question:
+      required: true
+      selector:
+        text:
+          multiline: true
+    conversation_id:
+      required: false
+      selector:
+        text:
+
+generate_audio:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    instructions:
+      required: false
+      selector:
+        text:
+          multiline: true
+    language:
+      required: false
+      example: en
+      selector:
+        text:
+    format:
+      required: false
+      selector:
+        select:
+          options:
+            - deep-dive
+            - brief
+            - critique
+            - debate
+    length:
+      required: false
+      selector:
+        select:
+          options:
+            - short
+            - default
+            - long
+    wait:
+      required: false
+      default: false
+      selector:
+        boolean:
+
+generate_video:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    instructions:
+      required: false
+      selector:
+        text:
+          multiline: true
+    language:
+      required: false
+      selector:
+        text:
+    format:
+      required: false
+      selector:
+        select:
+          options:
+            - explainer
+            - brief
+    style:
+      required: false
+      selector:
+        select:
+          options:
+            - auto-select
+            - classic
+            - whiteboard
+            - kawaii
+            - anime
+            - watercolor
+    wait:
+      required: false
+      default: false
+      selector:
+        boolean:
+
+generate_quiz:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    instructions:
+      required: false
+      selector:
+        text:
+    difficulty:
+      required: false
+      selector:
+        select:
+          options:
+            - easy
+            - medium
+            - hard
+    quantity:
+      required: false
+      selector:
+        select:
+          options:
+            - fewer
+            - standard
+            - more
+    wait:
+      required: false
+      default: false
+      selector:
+        boolean:
+
+generate_flashcards:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    instructions:
+      required: false
+      selector:
+        text:
+    difficulty:
+      required: false
+      selector:
+        select:
+          options:
+            - easy
+            - medium
+            - hard
+    quantity:
+      required: false
+      selector:
+        select:
+          options:
+            - fewer
+            - standard
+            - more
+    wait:
+      required: false
+      default: false
+      selector:
+        boolean:
+
+generate_report:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    instructions:
+      required: false
+      selector:
+        text:
+          multiline: true
+    language:
+      required: false
+      selector:
+        text:
+    format:
+      required: false
+      selector:
+        select:
+          options:
+            - briefing-doc
+            - study-guide
+            - blog-post
+    wait:
+      required: false
+      default: false
+      selector:
+        boolean:
+
+generate_slide_deck:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    instructions:
+      required: false
+      selector:
+        text:
+          multiline: true
+    language:
+      required: false
+      selector:
+        text:
+    format:
+      required: false
+      selector:
+        select:
+          options:
+            - detailed
+            - presenter
+    length:
+      required: false
+      selector:
+        select:
+          options:
+            - default
+            - short
+    wait:
+      required: false
+      default: false
+      selector:
+        boolean:
+
+generate_infographic:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    instructions:
+      required: false
+      selector:
+        text:
+    language:
+      required: false
+      selector:
+        text:
+    orientation:
+      required: false
+      selector:
+        select:
+          options:
+            - landscape
+            - portrait
+            - square
+    detail:
+      required: false
+      selector:
+        select:
+          options:
+            - concise
+            - standard
+            - detailed
+    wait:
+      required: false
+      default: false
+      selector:
+        boolean:
+
+generate_data_table:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    instructions:
+      required: false
+      selector:
+        text:
+          multiline: true
+    language:
+      required: false
+      selector:
+        text:
+    wait:
+      required: false
+      default: false
+      selector:
+        boolean:
+
+generate_mind_map:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    instructions:
+      required: false
+      selector:
+        text:
+    language:
+      required: false
+      selector:
+        text:
+
+sync_documentation:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    categories:
+      required: false
+      selector:
+        select:
+          multiple: true
+          options:
+            - overview
+            - areas
+            - entities
+            - automations
+            - scripts
+            - scenes
+            - helpers
+            - integrations
+
+download:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: notebooklm
+    notebook_id:
+      required: false
+      selector:
+        text:
+    artifact_type:
+      required: true
+      selector:
+        select:
+          options:
+            - audio
+            - video
+            - report
+            - quiz
+            - flashcards
+            - slide_deck
+            - infographic
+            - mind_map
+            - data_table
+    output_path:
+      required: true
+      example: "/media/podcast.mp3"
+      selector:
+        text:
+    artifact_id:
+      required: false
+      selector:
+        text:
+    format:
+      required: false
+      selector:
+        text:
