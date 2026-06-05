@@ -4,16 +4,51 @@
 
 # NotebookLM for Home Assistant
 
-Control [Google NotebookLM](https://notebooklm.google.com) from Home Assistant.
-This project gives you a config-flow integration (with re-authentication) plus a
-full set of **services/actions** you can call from automations and scripts —
-create notebooks, add sources, ask questions, and generate podcasts, videos,
-quizzes, reports, mind maps and more.
+> Drive [Google NotebookLM](https://notebooklm.google.com) from Home Assistant —
+> **ask your notebooks by voice**, **question your own smart-home config**, and
+> **run podcasts, reports and more from automations**. A config-flow integration
+> (with re-authentication) plus a full set of **services/actions**: create
+> notebooks, add sources, ask questions, and generate podcasts, videos, quizzes,
+> reports, mind maps and more.
+
+## ✨ Highlights
+
+Two ready-made dashboard cards — no `card-mod`, no YAML to paste:
+
+<p align="center">
+  <img src="docs/images/cards.png" alt="NotebookLM Chat and Actions dashboard cards" width="760">
+</p>
+
+Three things it does that the NotebookLM website can't:
+
+<table>
+  <tr>
+    <td width="33%" valign="top" align="center">
+      <img src="docs/images/voice.png" alt="Ask by voice" width="260"><br><br>
+      <b>🗣️ Ask by voice</b><br><br>
+      Question your notebook through Assist and hear the answer on a speaker,
+      hands-free.
+    </td>
+    <td width="33%" valign="top" align="center">
+      <img src="docs/images/synced-sources.png" alt="Know your own home" width="260"><br><br>
+      <b>🏠 Know your own home</b><br><br>
+      Export your Home Assistant config into a notebook and ask about your actual
+      setup — "which automation turns off the boiler?" — with citations. Secrets
+      and coordinates are stripped first.
+    </td>
+    <td width="33%" valign="top" align="center">
+      <img src="docs/images/device.png" alt="Run in the background" width="260"><br><br>
+      <b>🤖 Run in the background</b><br><br>
+      A trigger (time, a dropped file, a sensor, a button) can add a source,
+      generate a podcast, and notify you when it's done.
+    </td>
+  </tr>
+</table>
 
 > 🚧 **Early release.** This is an initial version — expect some rough edges and
 > bugs. Please report anything you hit on the
 > [issue tracker](https://github.com/CauTioNN/ha-notebooklm/issues).
-
+>
 > ⚠️ **Unofficial.** This uses Google's undocumented NotebookLM endpoints via the
 > community [`notebooklm-py`](https://github.com/teng-lin/notebooklm-py) library.
 > It is **not affiliated with Google** and may break if Google changes its APIs.
@@ -27,16 +62,6 @@ YouTube) into a private knowledge base you can question. This integration lets
 Home Assistant drive it: create notebooks, add sources, ask questions, and
 generate podcasts, reports and more — from automations, voice, or a dashboard
 button.
-
-Three things it does that the website doesn't:
-
-- **Ask by voice.** Question your notebook through Assist and hear the answer on
-  a speaker, hands-free.
-- **Know your own home.** Export your Home Assistant config into a notebook and
-  ask about your actual setup — "which automation turns off the boiler?" — with
-  citations. Secrets and coordinates are stripped first.
-- **Run in the background.** A trigger (time, a dropped file, a sensor, a button)
-  can add a source, generate a podcast, and notify you when it's done.
 
 ### Website vs. Home Assistant
 
@@ -90,26 +115,6 @@ Wiring it into HA means your **home automations can use that knowledge**:
 - 📰 **Auto-research** — kick off a web-research import on a schedule and get a
   briefing when it's done.
 
-## Quick start
-
-1. Install the integration and connect (below). The question box, Ask button,
-   answer sensor and voice intent appear automatically — nothing to copy.
-2. **Add a dashboard card.** The integration bundles two ready-made cards — no
-   `card-mod`, no YAML to paste. Edit a dashboard → **Add card → Community
-   cards**:
-   - **NotebookLM Chat** — a messaging-style card: notebook picker, ask box and
-     answer bubbles (loading spinner, tap an answer to expand/collapse).
-   - **NotebookLM Actions** — notebook picker + one-tap generate buttons
-     (podcast, quiz, report, mind map).
-
-   Both follow your Home Assistant language (English / Hebrew).
-
-   ![NotebookLM Chat and Actions cards](docs/images/cards.png)
-3. Pick a notebook in the **Active notebook** dropdown — every action runs on
-   it, **no IDs to type**.
-4. (Optional) Add automations from [`examples/automations.yaml`](examples/automations.yaml)
-   and voice sentences from [`examples/custom_sentences/`](examples/custom_sentences/).
-
 ## Installation
 
 > One-click add buttons (the integration button needs [HACS](https://hacs.xyz)):
@@ -147,6 +152,24 @@ browser on it).
 > install pulls the ready-made image instead. If you already copied it into
 > `/addons`, delete that folder first.
 
+## Quick start
+
+1. Install the integration and connect (above). The question box, Ask button,
+   answer sensor and voice intent appear automatically — nothing to copy.
+2. **Add a dashboard card.** The integration bundles two ready-made cards (shown
+   at the top of this page) — no `card-mod`, no YAML to paste. Edit a dashboard →
+   **Add card → Community cards**:
+   - **NotebookLM Chat** — a messaging-style card: notebook picker, ask box and
+     answer bubbles (loading spinner, tap an answer to expand/collapse).
+   - **NotebookLM Actions** — notebook picker + one-tap generate buttons
+     (podcast, quiz, report, mind map).
+
+   Both follow your Home Assistant language (English / Hebrew).
+3. Pick a notebook in the **Active notebook** dropdown — every action runs on
+   it, **no IDs to type**.
+4. (Optional) Add automations from [`examples/automations.yaml`](examples/automations.yaml)
+   and voice sentences from [`examples/custom_sentences/`](examples/custom_sentences/).
+
 ## Authentication
 
 Pick one in the config flow:
@@ -176,8 +199,6 @@ What you'll actually see, start to finish:
    with everything wired up: the **Active notebook** dropdown, the **Question**
    box, the **Ask** button, and the **Last answer**, **Authentication status**,
    **Notebooks** and **Documentation** sensors. Nothing to copy or paste.
-
-   ![The NotebookLM device and its auto-created entities](docs/images/device.png)
 4. **Set your default notebook.** On the integration card click **Configure →
    General** and pick a **Default notebook** (every service/button uses it, so
    you never type an ID). *Tip: do this right after setup.*
@@ -209,8 +230,6 @@ exports a Markdown snapshot of your setup and syncs it into a NotebookLM
 notebook; the existing `notebooklm.ask` service (and the **Ask** box / voice
 intent) then answer questions **grounded in your actual config, with citations**
 — about *your* home, not a generic guess.
-
-![Synced HA sources in NotebookLM](docs/images/synced-sources.png)
 
 **No AI required.** The export is purely mechanical (it reads HA's registries
 and states). NotebookLM itself is the AI — so there's no local LLM, no API key,
