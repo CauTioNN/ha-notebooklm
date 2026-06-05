@@ -4,7 +4,7 @@
 
 # NotebookLM for Home Assistant
 
-> Drive [Google NotebookLM](https://notebooklm.google.com) from Home Assistant —
+> [Google NotebookLM](https://notebooklm.google.com) from Home Assistant —
 > **ask your notebooks by voice**, **question your own smart-home config**, and
 > **run podcasts, reports and more from automations**. A config-flow integration
 > (with re-authentication) plus a full set of **services/actions**: create
