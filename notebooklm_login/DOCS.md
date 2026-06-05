@@ -17,11 +17,19 @@ Assistant config directory where the integration picks it up.
 2. Click **1. Open Google login**. A Chromium window appears in the panel.
 3. Complete the Google sign-in for the account you use with NotebookLM.
 4. When NotebookLM has loaded and the login window closes, click
-   **2. Save credentials**. You should see *"Saved!"*.
-5. Go to **Settings → Devices & Services → Add Integration → NotebookLM**,
-   choose **Sign in with Google**, and press **Submit**.
+   **2. Save credentials**. You should see *"Saved ✓"*.
+5. The add-on then **takes you straight to the NotebookLM setup dialog** and
+   **stops itself a few seconds later** — no need to stop it by hand. Just choose
+   **Sign in with Google** and press **Submit** to finish.
 
-You can stop the add-on after the integration has been configured.
+   _If your browser blocks the automatic redirect, click the **Continue to setup
+   →** link that appears, or go to **Settings → Devices & Services → Add
+   Integration → NotebookLM** yourself._
+
+> **Re-authenticating?** If you opened the add-on to refresh expired credentials
+> (rather than a first-time install), finish from the **re-authentication**
+> notification instead of the add-integration dialog — your saved credentials are
+> already written and waiting.
 
 ## Notes & security
 

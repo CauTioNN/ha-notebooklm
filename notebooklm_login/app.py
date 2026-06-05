@@ -13,7 +13,7 @@ import json
 import logging
 import os
 
-from aiohttp import WSMsgType, web
+from aiohttp import ClientSession, WSMsgType, web
 
 logging.basicConfig(level=logging.INFO)
 _LOGGER = logging.getLogger("notebooklm-login")
@@ -24,6 +24,13 @@ NOVNC_DIR = "/usr/share/novnc"
 STORAGE_PATH = "/data/notebooklm/profiles/default/storage_state.json"
 # Home Assistant config dir is mounted here via `map: homeassistant_config:rw`.
 RESULT_PATH = "/homeassistant/.notebooklm_login_result.json"
+# Deep link (relative to the HA frontend origin — the Ingress page is same-origin)
+# that opens the "Set up NotebookLM" dialog once credentials are saved.
+SETUP_REDIRECT = "/config/integrations/dashboard/add?domain=notebooklm"
+# After a successful capture we redirect the user, then stop ourselves a few
+# seconds later (redirect first, so the top window has navigated away before the
+# Ingress page is torn down).
+SELF_STOP_DELAY = 6
 
 _state: dict[str, object] = {"proc": None, "captured": False, "error": None}
 
@@ -50,6 +57,7 @@ INDEX_HTML = """<!doctype html>
   <button id="start">1. Open Google login</button>
   <button id="capture" class="secondary">2. Save credentials</button>
   <span id="status">Idle</span>
+  <a id="continue" href="#" target="_top" style="display:none; margin-left:10px; color:#8bc34a;">Continue to setup &rarr;</a>
 </header>
 <div id="screen"></div>
 <script type="module">
@@ -79,12 +87,26 @@ INDEX_HTML = """<!doctype html>
     statusEl.textContent = r.status === 'started' ? 'Sign in in the window below'
       : (r.status === 'running' ? 'Already running' : ('Error: ' + (r.error || '')));
   };
+  function goToSetup(url) {
+    // Prefer navigating the top window (we run inside the HA Ingress iframe).
+    try { window.top.location.assign(url); }
+    catch (e) { window.location.assign(url); }
+  }
+
   document.getElementById('capture').onclick = async () => {
     statusEl.textContent = 'Saving...';
     const r = await post('/api/capture');
-    statusEl.innerHTML = r.ok
-      ? '<span class="ok">Saved! Return to Home Assistant and press Submit.</span>'
-      : '<span class="err">' + (r.error || 'No credentials yet') + '</span>';
+    if (!r.ok) {
+      statusEl.innerHTML = '<span class="err">' + (r.error || 'No credentials yet') + '</span>';
+      return;
+    }
+    statusEl.innerHTML = '<span class="ok">Saved &#10003; &mdash; opening NotebookLM setup&hellip;</span>';
+    const url = r.redirect || '/config/integrations/dashboard';
+    // Manual fallback in case the browser blocks the auto-navigation.
+    const cont = document.getElementById('continue');
+    cont.href = url;
+    cont.style.display = 'inline';
+    setTimeout(() => goToSetup(url), 800);
   };
 
   setInterval(async () => {
@@ -190,7 +212,40 @@ async def api_capture(_request: web.Request) -> web.Response:
     except (OSError, ValueError) as err:
         return web.json_response({"ok": False, "error": str(err)})
     _state["captured"] = True
-    return web.json_response({"ok": True})
+    # Hand the user off to the integration setup, then shut ourselves down so the
+    # heavy Chromium add-on isn't left running.
+    asyncio.create_task(_schedule_self_stop(SELF_STOP_DELAY))
+    return web.json_response({"ok": True, "redirect": SETUP_REDIRECT})
+
+
+async def _schedule_self_stop(delay: int) -> None:
+    """Stop this add-on via the Supervisor API after ``delay`` seconds.
+
+    Falls back to exiting the process (which stops the container) if the
+    Supervisor call isn't available.
+    """
+    await asyncio.sleep(delay)
+    token = os.environ.get("SUPERVISOR_TOKEN")
+    if token:
+        try:
+            async with ClientSession() as session:
+                async with session.post(
+                    "http://supervisor/addons/self/stop",
+                    headers={"Authorization": f"Bearer {token}"},
+                ) as resp:
+                    if resp.status < 400:
+                        _LOGGER.info("Stopping add-on via Supervisor API")
+                        return
+                    _LOGGER.warning(
+                        "Supervisor stop returned HTTP %s; exiting instead",
+                        resp.status,
+                    )
+        except OSError as err:
+            _LOGGER.warning("Supervisor stop failed (%s); exiting instead", err)
+    else:
+        _LOGGER.warning("No SUPERVISOR_TOKEN; exiting to stop the container")
+    # Fallback: exit the main process. run.sh `exec`s us, so the container stops.
+    os._exit(0)
 
 
 def _read_text(path: str) -> str:

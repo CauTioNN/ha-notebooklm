@@ -1,6 +1,6 @@
 name: NotebookLM Login
 slug: notebooklm_login
-version: "0.2.1"
+version: "0.3.0"
 description: Interactive Google sign-in for the NotebookLM integration (runs Chromium inside Home Assistant).
 url: https://github.com/CauTioNN/ha-notebooklm
 # Prebuilt image published to GHCR by .github/workflows/builder.yaml. When the
@@ -19,6 +19,9 @@ ingress_port: 8099
 panel_icon: mdi:notebook-edit
 panel_title: NotebookLM Login
 init: false
+# Lets the add-on stop itself (POST /addons/self/stop) after credentials are
+# saved, so the heavy Chromium container isn't left running.
+hassio_api: true
 map:
   - homeassistant_config:rw
 options: {}

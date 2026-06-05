@@ -143,7 +143,9 @@ browser on it).
    `https://github.com/CauTioNN/ha-notebooklm`).
 2. Refresh the store, open **NotebookLM Login**, and click **Install**. It
    **downloads a prebuilt image** (~1 minute) — no on-device build.
-3. **Start** it, open its **Web UI** and sign in. See
+3. **Start** it, open its **Web UI** and sign in. When you save your credentials
+   the add-on hands you straight to the NotebookLM setup dialog and **stops
+   itself** — nothing left running. See
    [the add-on docs](notebooklm_login/DOCS.md).
 
 > ⚠️ **Install it from the repository, do NOT copy it into `/addons`.** A
